@@ -194,6 +194,27 @@ RCT_EXPORT_METHOD(show:(NSDictionary*)options resolver:(RCTPromiseResolveBlock)r
     [jsResult setObject:[NSNumber numberWithBool:result.paymentMethod.isDefault] forKey:@"isDefault"];
     [jsResult setObject:deviceDataCollector forKey:@"deviceData"];
 
+    if ([paymentMethod isKindOfClass:[BTCardNonce class]]) {
+        // Credit cards like Amex, Visa, Discover
+        BTCardNonce *cardNonce = (BTCardNonce *)result.paymentMethod;
+        [jsResult setObject:cardNonce.lastTwo forKey:@"lastTwo"];
+        [jsResult setObject:cardNonce.lastFour forKey:@"lastFour"];
+    } else if ([paymentMethod isKindOfClass:[BTPayPalAccountNonce class]]) {
+        // Need to send PayPal email used or phone
+        BTPayPalAccountNonce *paypalNonce = (BTPayPalAccountNonce *)result.paymentMethod;
+        [jsResult setObject:paypalNonce.email forKey:@"email"];
+        [jsResult setObject:paypalNonce.phone forKey:@"phone"];
+        [jsResult setObject:paypalNonce.payerId forKey:@"payerId"];
+    } else if ([paymentMethod isKindOfClass:[BTVenmoAccountNonce class]]) {
+        // Venmo details
+        BTVenmoAccountNonce *venmoNonce = (BTVenmoAccountNonce *)result.paymentMethod;
+        [jsResult setObject:venmoNonce.username forKey:@"userName"];
+    } else if ([paymentMethod isKindOfClass:[BTApplePayCardNonce class]]) {
+        // Nothing here at the moment
+        // BTApplePayCardNonce *applePayNonce = (BTApplePayCardNonce *)result.paymentMethod;
+        
+    }
+    
     resolve(jsResult);
 }
 

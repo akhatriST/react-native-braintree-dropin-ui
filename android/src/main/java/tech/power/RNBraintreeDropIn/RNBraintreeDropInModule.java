@@ -2,6 +2,11 @@ package tech.power.RNBraintreeDropIn;
 
 import android.app.Activity;
 import android.content.Intent;
+
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.GooglePaymentCardNonce;
+import com.braintreepayments.api.models.PayPalAccountNonce;
+import com.braintreepayments.api.models.VenmoAccountNonce;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -138,6 +143,35 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
     jsResult.putString("description", paymentMethodNonce.getDescription());
     jsResult.putBoolean("isDefault", paymentMethodNonce.isDefault());
     jsResult.putString("deviceData", deviceData);
+
+    if (paymentMethodNonce instanceof PayPalAccountNonce) {
+      // Need to send PayPal email used or phone
+      PayPalAccountNonce paypal = (PayPalAccountNonce) paymentMethodNonce;
+      jsResult.putString("email", paypal.getEmail());
+      jsResult.putString("phone", paypal.getPhone());
+      jsResult.putString("payerId", paypal.getPayerId());
+    }
+    else if (paymentMethodNonce instanceof GooglePaymentCardNonce ) {
+     // Send google pay email and card details
+      GooglePaymentCardNonce google = (GooglePaymentCardNonce) paymentMethodNonce;
+      jsResult.putString("email", google.getEmail());
+      jsResult.putString("lastTwo", google.getLastTwo());
+      jsResult.putString("lastFour", google.getLastFour());
+    }
+    else if(paymentMethodNonce instanceof VenmoAccountNonce) {
+      // Venmo details
+      VenmoAccountNonce venmo = (VenmoAccountNonce) paymentMethodNonce;
+      jsResult.putString("userName", venmo.getUsername());
+    }
+    else if (paymentMethodNonce instanceof CardNonce) {
+      // Credit cards like Amex, Visa, Discover
+      CardNonce card = (CardNonce) paymentMethodNonce;
+      jsResult.putString("lastTwo", card.getLastTwo());
+      jsResult.putString("lastFour", card.getLastFour());
+    }
+    else {
+      // Nothing here at the moment
+    }
 
     mPromise.resolve(jsResult);
   }
