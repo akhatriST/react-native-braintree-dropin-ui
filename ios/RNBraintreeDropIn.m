@@ -202,9 +202,15 @@ RCT_EXPORT_METHOD(show:(NSDictionary*)options resolver:(RCTPromiseResolveBlock)r
     } else if ([result.paymentMethod isKindOfClass:[BTPayPalAccountNonce class]]) {
         // Need to send PayPal email used or phone
         BTPayPalAccountNonce *paypalNonce = (BTPayPalAccountNonce *)result.paymentMethod;
-        [jsResult setObject:paypalNonce.email forKey:@"email"];
-        [jsResult setObject:paypalNonce.phone forKey:@"phone"];
-        [jsResult setObject:paypalNonce.payerId forKey:@"payerId"];
+        if (paypalNonce.email != nil){
+            [jsResult setObject:paypalNonce.email forKey:@"email"];
+        }
+        if (paypalNonce.phone != nil){
+            [jsResult setObject:paypalNonce.phone forKey:@"phone"];
+        }
+        if (paypalNonce.payerId != nil){
+            [jsResult setObject:paypalNonce.payerId forKey:@"payerId"];
+        }
     } else if ([result.paymentMethod isKindOfClass:[BTVenmoAccountNonce class]]) {
         // Venmo details
         BTVenmoAccountNonce *venmoNonce = (BTVenmoAccountNonce *)result.paymentMethod;
