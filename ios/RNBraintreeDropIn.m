@@ -1,6 +1,7 @@
 #import "RNBraintreeDropIn.h"
 #import <React/RCTUtils.h>
 #import "BTThreeDSecureRequest.h"
+#import "BTPayPalRequest.h"
 
 @implementation RNBraintreeDropIn
 
