@@ -101,6 +101,12 @@ RCT_EXPORT_METHOD(show:(NSDictionary*)options resolver:(RCTPromiseResolveBlock)r
         request.applePayDisabled = YES;
     }
 
+    if(options[@"orderTotal"]) {
+        // ...start the Checkout flow
+        BTPayPalRequest *paypalRequest = [[BTPayPalRequest alloc] initWithAmount: options[@"orderTotal"]];
+        request.payPalRequest = paypalRequest;
+    }
+    
     BTDropInController *dropIn = [[BTDropInController alloc] initWithAuthorization:clientToken request:request handler:^(BTDropInController * _Nonnull controller, BTDropInResult * _Nullable result, NSError * _Nullable error) {
             [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
 

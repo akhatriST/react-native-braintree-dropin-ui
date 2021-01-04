@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.braintreepayments.api.dropin.utils.PaymentMethodType;
 import com.braintreepayments.api.models.GooglePaymentCardNonce;
 import com.braintreepayments.api.models.PayPalAccountNonce;
+import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.VenmoAccountNonce;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -92,6 +93,11 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
       dropInRequest
       .amount(String.valueOf(threeDSecureOptions.getDouble("amount")))
       .requestThreeDSecureVerification(true);
+    }
+
+    if (options.hasKey("orderTotal")) {
+      PayPalRequest payPalRequest = new PayPalRequest(options.getString("orderTotal"));
+      dropInRequest.paypalRequest(payPalRequest);
     }
 
     mPromise = promise;
